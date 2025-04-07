@@ -67,7 +67,7 @@ class TestPet:
             assert response_json['name'] == payload['name'], "имя питомца не совпадает с ожидаемым"
             assert response_json['status'] == payload['status'], "статус питомца не совпадает с ожидаемым"
 
-    @allure.title("Добавление питомца_Домашка")
+    @allure.title("Добавление питомца с полным наборо данных")
     def test_add_pet_full_data_set(self):
         with allure.step("Подготовка данных для создания питомца с полным набором данных"):
             payload = {
