@@ -122,7 +122,7 @@ class TestPet:
     def test_put_pet(self, create_pet):
         with allure.step("Получение ID созданного питомца"):
             pet_id = create_pet["id"]
-        with allure.step("Подготовка данных для создания питомца с полным набором данных"):
+        with allure.step("Подготовка данных для обновления информации о питомце"):
             payload = {
                 "id": pet_id,
                 "name": "Buddy Updated",
