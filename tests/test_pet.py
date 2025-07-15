@@ -1,9 +1,10 @@
 import allure
 import jsonschema
+import pytest
 import requests
 from .schemas.pet_schema import PET_SCHEMA
 
-BASE_URL = "http://5.181.109.28:9090/api/v3"
+BASE_URL = "http://rv-school.ru:9090/api/v3"
 
 @allure.feature("Pet")
 class TestPet:
@@ -104,3 +105,26 @@ class TestPet:
             assert response_json['photoUrls'] == payload['photoUrls'], "photoUrls питомца не совпадает с ожидаемым"
             assert response_json['tags'] == payload['tags'], "tags питомца не совпадает с ожидаемым"
             assert response_json['status'] == payload['status'], "статус питомца не совпадает с ожидаемым"
+
+    @allure.title("Получение списка питомцев по статусу")
+    @pytest.mark.parametrize(
+        "status, expected_status_code",
+        [
+            ("available", 200),
+            ("pending", 200),
+            ("sold", 200),
+            ("", 400),
+            ("nonexistent", 400)
+
+        ]
+    )
+    def test_get_pets_by_status(self, status, expected_status_code):
+        with allure.step(f"Отправка запроса на получение питомцев по статусу {status}"):
+            response = requests.get(f"{BASE_URL}/pet/findByStatus", params={"status": status} if status is not None else {})
+
+        with allure.step("Проверка статуса ответа и формата данных"):
+            assert response.status_code == expected_status_code
+            if expected_status_code == 200:
+                assert isinstance(response.json(), list)
+            else:
+                assert response.json() is not None
